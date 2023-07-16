@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Home</title>
+</head>
+<body>
+  <h1>Seja bem vindx!</h1>
+  <h2>Nossos produtos</h2>
+  {{#each products}}
+  <div>
+    <h3>{{this.title}}</h3>
+    <p>descrição: {{this.description}}</p>
+    <p>preço: ${{this.price}}</p>
+    <img src="{{this.thumbnail}}" alt="product thumbnail">
+  </div>
+  {{/each}}
+</body>
+</html>

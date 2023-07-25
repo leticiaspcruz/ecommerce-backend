@@ -1,8 +1,9 @@
 {
-  "name": "express",
+  "name": "app-ecommerce",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -11,7 +12,6 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.18.2",
-    "handlebars": "^4.7.7",
-    "socket.io": "^4.7.1"
+    "mongoose": "^7.3.1"
   }
 }

@@ -1,9 +1,11 @@
-import Message from './models/messageSchema';
 
 class MessagesManager {
   constructor() {}
 
   async createMessage(sender, content) {
+
+    const { Message } = require('./models/messageSchema');
+
     try {
       const message = new Message({
         sender,
@@ -26,4 +28,4 @@ class MessagesManager {
   }
 }
 
-module.exports = MessagesManager;
+export default MessagesManager;

@@ -25,5 +25,3 @@ mongoose.connect(mongoAtlasUrl)
 app.use('/api/products', productRoutes);
 app.use('/api/carts', cartRoutes);
 app.use('/api/messages', messagesRoutes);
-
-

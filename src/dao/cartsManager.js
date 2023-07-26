@@ -1,4 +1,3 @@
-import Cart from './models/cartSchema';
 import fs from 'fs';
 
 class CartsManager {
@@ -7,6 +6,8 @@ class CartsManager {
   }
 
   async createCart(userId, items) {
+    const { Cart } = require('./models/cartSchema');
+
     try {
       const cart = new Cart({
         userId,
@@ -66,4 +67,4 @@ class CartsManager {
   }
 }
 
-module.exports = CartsManager;
+export default CartsManager;

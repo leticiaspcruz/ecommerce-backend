@@ -1,4 +1,3 @@
-import Product from './models/productSchema';
 import fs from 'fs';
 
 class ProductsManager {
@@ -10,6 +9,8 @@ class ProductsManager {
     if (!title || !description || !price || !code || !stock || !status) {
       throw new Error("Todos os campos são obrigatórios, exceto o thumbnails");
     }
+
+    const { Product } = require('./models/productSchema');
 
     try {
       const product = new Product({
@@ -76,4 +77,4 @@ class ProductsManager {
   }
 }
 
-module.exports = ProductsManager;
+export default ProductsManager;

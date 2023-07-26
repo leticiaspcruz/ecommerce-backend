@@ -1,13 +1,16 @@
 import express, { urlencoded } from 'express';
+import path from 'path';
+import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import productRoutes from './routes/productRoutes.js';
 import cartRoutes from './routes/cartRoutes.js';
 import messagesRoutes from './routes/messageRoutes.js';
-
 const app = express();
 
 app.use(urlencoded({extended: true}));
 app.use(express.json());
+
+dotenv.config({ path: path.resolve('../.env') });
 
 const port = 8080;
 const server = app.listen(port, () => console.log(`Server listening on port ${port}`));

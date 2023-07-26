@@ -1,2 +1,2 @@
 # ecommerce-backend
-Final project developed to learn Nodejs  - Coderhouse / Backend 2023
+Final project developed to learn NodeJS  - Coderhouse / Backend 2023

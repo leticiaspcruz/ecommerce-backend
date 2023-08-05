@@ -11,7 +11,7 @@ import messagesRoutes from './routes/messageRoutes.js';
 import initializePassport from "./config/passportConfig.js";
 
 const app = express();
-dotenv.config({ path: path.resolve('../.env') });
+dotenv.config({ path: path.resolve('./.env') });
 
 const port = 8080;
 const server = app.listen(port, () => console.log(`Server listening on port ${port}`));
@@ -42,8 +42,8 @@ app.use(session({
     saveUninitialized: true
 }));
 
-app.use('/api/login', loginRouter);
-app.use('/api/user', userRouter);
+// app.use('/api/login', loginRouter);
+// app.use('/api/user', userRouter);
 app.use('/api/products', productRoutes);
 app.use('/api/carts', cartRoutes);
 app.use('/api/messages', messagesRoutes);

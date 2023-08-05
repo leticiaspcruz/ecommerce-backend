@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Chat</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <h1>Chat</h1>
+  <div id="messages">
+    {{#each messages}}
+      <div class="message">
+        <span class="sender">{{this.sender}}</span>
+        <span class="content">{{this.content}}</span>
+      </div>
+    {{/each}}
+  </div>
+</body>
+</html>

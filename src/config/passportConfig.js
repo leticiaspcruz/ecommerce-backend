@@ -1,46 +1,34 @@
 import passport from 'passport';
-import local from 'passport-local'
-import { User } from '../dao/models/userSchema';
-import { createHash, isValidPassword } from '../utils/utils';
-
-const LocalStrategy = local.Strategy;
+import GitHubStrategy from 'passport-github2';
+import User from '../dao/models/userSchema.js';
 
 const initializePassport = () => {
-    passport.use('register', new LocalStrategy(
-        { passReqToCallback: true, usernameField: 'email' }, async (req, username, password, done) => {
-            const { firstName, lastName, age, email } = req.body;
-            try {
-                let user = await User.findOne({ email: username });
-                if (user) {
-                    return done(null, false, { message: 'Email já cadastrado' });
-                }
+    passport.use('github', new GitHubStrategy({
+        clientID: 'Iv1.85f64030b26ba9ae',
+        clientSecret: '38c0fa67ad1d39a1c5fd71c84b7925896fbddc5d',
+        callbackURL: 'http://localhost:8080/api/sessions/github'
+    }, async (accessToken, refreshToken, profile, done) => {
+        try {
+            console.log(profile);
+            let user = await User.findOne({ email: ( profile._json.email ? profile._json.email : profile._json.login ) });
+            if (!user) {
                 let newUser = {
-                    firstName: firstName,
-                    lastName: lastName,
-                    email: email,
-                    age: age,
-                    password: createHash(password)
+                    firstName: profile._json.name,
+                    email: ( profile._json.email ? profile._json.email : profile._json.login ),
+                    lastName: '',
+                    age: 99,
+                    password: '',
                 }
                 let result = await User.create(newUser);
-                return done(null, result);
-            } catch (error) {
-                return done(`Erro ao obter o usuario ${error}`);
+                console.log('result:' + result);
+                done(null, result);
+            }
+            else {
+                done(null, user);
             }
         }
-    ))
-
-    passport.use('login', new LocalStrategy({usernameField: 'email'}, async (username, password, done) => {
-        try {
-            const user = await User.findOne({ email: username })
-            if (!user) {
-                return done(null, false);
-            }
-            if (!isValidPassword(user, password)) {
-                return done(null, false);
-            }
-            return done(null, user);
-        } catch(error) {
-            return done(error);
+        catch (error) {
+            done(error);
         }
     }));
 

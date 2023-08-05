@@ -2,13 +2,14 @@ import express, { urlencoded } from 'express';
 import path from 'path';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
-import session from "express-session";
-import cookieParser from 'cookie-parser';
-import MongoStore from "connect-mongo";
+// import session from "express-session";
+// import cookieParser from 'cookie-parser';
+// import MongoStore from "connect-mongo";
 import productRoutes from './routes/productRoutes.js';
 import cartRoutes from './routes/cartRoutes.js';
 import messagesRoutes from './routes/messageRoutes.js';
-import initializePassport from "./config/passportConfig.js";
+// import initializePassport from "./config/passportConfig.js";
+import  handlebars  from 'express-handlebars';
 
 const app = express();
 dotenv.config({ path: path.resolve('./.env') });
@@ -26,21 +27,26 @@ mongoose.connect(mongoAtlasUrl).then(() => console.log("Connected to mongoDB"))
     }
 });
 
-initializePassport();
+// initializePassport();
+
+const viewFolder = './dao/views';
+app.engine('handlebars', handlebars.engine());
+app.set('views', viewFolder);
+app.set('view engine', 'handlebars');
 
 app.use(urlencoded({extended: true}));
 app.use(express.json());
-app.use(cookieParser());
-app.use(session({
-    store: MongoStore.create({
-        mongoUrl: mongoAtlasUrl,
-        mongoOptions: { useUnifiedTopology: true },
-        ttl: 150,
-    }),
-    secret: process.env.MONGODB_SECRET,
-    resave: false,
-    saveUninitialized: true
-}));
+// app.use(cookieParser());
+// app.use(session({
+//     store: MongoStore.create({
+//         mongoUrl: mongoAtlasUrl,
+//         mongoOptions: { useUnifiedTopology: true },
+//         ttl: 150,
+//     }),
+//     secret: process.env.MONGODB_SECRET,
+//     resave: false,
+//     saveUninitialized: true
+// }));
 
 // app.use('/api/login', loginRouter);
 // app.use('/api/user', userRouter);

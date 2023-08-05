@@ -3,7 +3,7 @@ import MessagesManager from '../dao/messagesManager.js';
 
 const router = express.Router();
 const messagesManager = new MessagesManager();
-const messageRoute = '/messages';
+const messageRoute = '/api/messages';
 
 router.post(`${messageRoute}`, (req, res) => {
   const { sender, content } = req.body;

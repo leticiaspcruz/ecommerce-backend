@@ -3,9 +3,8 @@ import CartsManager from '../dao/cartsManager.js';
 
 const router = express.Router();
 const cartsManager = new CartsManager();
-const cartsRoute = '/api/carts';
 
-router.post(`${cartsRoute}/`, (req, res) => {
+router.post('/', (req, res) => {
   const { cartId } = req.body;
   cartsManager.createCart(cartId)
     .then(() => {
@@ -16,7 +15,7 @@ router.post(`${cartsRoute}/`, (req, res) => {
     });
 });
 
-router.get(`${cartsRoute}/:id`, (req, res) => {
+router.get('/:id', (req, res) => {
   const cartId = parseInt(req.params.id);
   cartsManager.getCartById(cartId)
     .then(cart => {
@@ -31,7 +30,7 @@ router.get(`${cartsRoute}/:id`, (req, res) => {
     });
 });
 
-router.post(`${cartsRoute}/:cartId/product/:productId`, (req, res) => {
+router.post('/:cartId/product/:productId', (req, res) => {
   const cartId = parseInt(req.params.cartId);
   const productId = parseInt(req.params.productId);
 

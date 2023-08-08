@@ -1,11 +1,9 @@
+import Message from './models/messageSchema.js';
 
 class MessagesManager {
   constructor() {}
 
   async createMessage(sender, content) {
-
-    const { Message } = require('./models/messageSchema');
-
     try {
       const message = new Message({
         sender,

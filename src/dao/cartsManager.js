@@ -1,4 +1,5 @@
 import fs from 'fs';
+import Cart from './models/cartSchema.js';
 
 class CartsManager {
   constructor(path) {
@@ -6,8 +7,6 @@ class CartsManager {
   }
 
   async createCart(userId, items) {
-    const { Cart } = require('./models/cartSchema');
-
     try {
       const cart = new Cart({
         userId,

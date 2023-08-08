@@ -6,20 +6,20 @@ router.get('/', (req, res) => {
   res.render('home');
 });
 
-router.get('/api/login', (req, res) => {
+router.get('/login', (req, res) => {
   res.render('login');
 });
 
 
-router.get('/api/products', (req, res) => {
+router.get('/products', (req, res) => {
   res.render('product');
 });
 
-router.get('/api/carts', (req, res) => {
+router.get('/carts', (req, res) => {
   res.render('cart');
 });
 
-router.get('/api/messages', (req, res) => {
+router.get('/messages', (req, res) => {
   res.render('chat');
 });
 

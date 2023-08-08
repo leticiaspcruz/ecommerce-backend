@@ -5,14 +5,10 @@ import mongoose from 'mongoose';
 import session from "express-session";
 import cookieParser from 'cookie-parser';
 import MongoStore from "connect-mongo";
-import productRoutes from './routes/productRoutes.js';
-import cartRoutes from './routes/cartRoutes.js';
-import messagesRoutes from './routes/messageRoutes.js';
 import viewsRoutes from './routes/viewsRoutes.js';
-import loginRoutes from './routes/loginRoutes.js';
-import userRoutes from './routes/userRoutes.js';
 import initializePassport from "./config/passportConfig.js";
 import  handlebars  from 'express-handlebars';
+import routes from './routes/routes.js';
 
 const app = express();
 dotenv.config({ path: path.resolve('./.env') });
@@ -50,9 +46,7 @@ app.use(session({
     resave: false,
     saveUninitialized: true
 }));
+
+app.use('/api', routes);
 app.use('/', viewsRoutes);
-app.use('/api/login', loginRoutes);
-app.use('/api/user', userRoutes);
-app.use('/api/products', productRoutes);
-app.use('/api/carts', cartRoutes);
-app.use('/api/messages', messagesRoutes);
+

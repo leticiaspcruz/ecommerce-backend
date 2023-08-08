@@ -2,11 +2,9 @@ import express from 'express';
 import ProductsManager from '../dao/productsManager.js';
 
 const router = express.Router();
-const productsRoute = '/api/products';
-
 const productsManager = new ProductsManager();
 
-router.get(`${productsRoute}/`, (req, res) => {
+router.get('/', (req, res) => {
   const { limit} = req.query;
   const products = productsManager.getProducts();
 
@@ -19,7 +17,7 @@ router.get(`${productsRoute}/`, (req, res) => {
   res.send('Lista de produtos:');
 });
 
-router.get(`${productsRoute}/:id`, (req, res) => {
+router.get('/:id', (req, res) => {
   const productId = parseInt(req.params.id); 
   const product = productsManager.getProductById(productId);
 
@@ -31,9 +29,9 @@ router.get(`${productsRoute}/:id`, (req, res) => {
   res.send('Produto com o id informado:');
 });
 
-router.post(`${productsRoute}/`, (req, res) => {
-  const product = req.body;
-  const addedProduct = productsManager.addProduct(...product);
+router.post('/', (req, res) => {
+  const { title, description, price, thumbnails, code, stock, status } = req.body;
+  const addedProduct = productsManager.addProduct(title, description, price, thumbnails, code, stock, status);
 
   if (addedProduct) {
     res.json({ message: 'Novo produto adicionado! :D', product: addedProduct });
@@ -43,7 +41,7 @@ router.post(`${productsRoute}/`, (req, res) => {
 });
 
 
-router.put(`${productsRoute}/:id`, (req, res) => {
+router.put('/:id', (req, res) => {
   const productId = parseInt(req.params.id);
   const { title, description, price, code, stock, status, thumbnails } = req.body;
 
@@ -69,7 +67,7 @@ router.put(`${productsRoute}/:id`, (req, res) => {
   }
 });
 
-router.delete(`${productsRoute}/:id`, (req, res) => {
+router.delete('/:id', (req, res) => {
   const productId = parseInt(req.params.id);
   const deleted = productsManager.deleteProduct(productId);
 

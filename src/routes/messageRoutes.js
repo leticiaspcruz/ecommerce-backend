@@ -3,9 +3,8 @@ import MessagesManager from '../dao/messagesManager.js';
 
 const router = express.Router();
 const messagesManager = new MessagesManager();
-const messageRoute = '/api/messages';
 
-router.post(`${messageRoute}`, (req, res) => {
+router.post('/', (req, res) => {
   const { sender, content } = req.body;
 
   messagesManager.createMessage(sender, content)
@@ -17,7 +16,7 @@ router.post(`${messageRoute}`, (req, res) => {
     });
 });
 
-router.get(`${messageRoute}`, (req, res) => {
+router.get('/', (req, res) => {
   messagesManager.getAllMessages()
     .then(messages => {
       res.status(200).json(messages);

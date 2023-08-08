@@ -30,13 +30,11 @@ router.get('/:id', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-  const { title, description, price, thumbnails, code, stock, status } = req.body;
-  const addedProduct = productsManager.addProduct(title, description, price, thumbnails, code, stock, status);
-
-  if (addedProduct) {
-    res.json({ message: 'Novo produto adicionado! :D', product: addedProduct });
+  const product = req.body;
+  if(product) {
+    res.json({ message: 'Novo produto adicionado! :D', product: product });
   } else {
-    res.status(500).json({ error: 'Não foi possível adicionar o produto.' });
+    res.status(400).json({ error: 'Erro ao adicionar o produto' });
   }
 });
 

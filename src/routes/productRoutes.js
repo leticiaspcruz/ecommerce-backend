@@ -33,8 +33,15 @@ router.get(`${productsRoute}/:id`, (req, res) => {
 
 router.post(`${productsRoute}/`, (req, res) => {
   const product = req.body;
-  res.send('Novo produto adicionado! :D');
+  const addedProduct = productsManager.addProduct(...product);
+
+  if (addedProduct) {
+    res.json({ message: 'Novo produto adicionado! :D', product: addedProduct });
+  } else {
+    res.status(500).json({ error: 'Não foi possível adicionar o produto.' });
+  }
 });
+
 
 router.put(`${productsRoute}/:id`, (req, res) => {
   const productId = parseInt(req.params.id);

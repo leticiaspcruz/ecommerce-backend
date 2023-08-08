@@ -37,7 +37,7 @@ app.engine('handlebars', handlebars.engine());
 app.set('views', viewFolder);
 app.set('view engine', 'handlebars');
 
-app.use(urlencoded({extended: true}));
+app.use(urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
 app.use(session({

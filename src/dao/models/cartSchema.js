@@ -5,24 +5,14 @@ const cartSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     required: true,
   },
-  items: [
-    {
-      productId: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-      },
-      quantity: {
-        type: Number,
-        required: true,
-      },
-    },
-  ],
+  products: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Product'
+}],
   createdAt: {
     type: Date,
     default: Date.now,
   },
-});
+})
 
-const Cart = mongoose.model('Cart', cartSchema);
-
-export default Cart;
+export default mongoose.model('Cart', cartSchema)

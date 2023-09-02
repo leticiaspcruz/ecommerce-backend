@@ -17,9 +17,11 @@ routes.get('/api/products/:productId', ProductController.getProductById);
 routes.delete('/api/products/:productId', ProductController.deleteProduct);
 
 //cart routes
-routes.post('/api/carts/:userId', CartController.createCart);
-routes.get('/carts/:userId', CartController.getUserCarts);
-routes.get('/carts/:userId/:cartId', CartController.getCart);
+routes.post('/api/carts', CartController.createCart);
+routes.get('/api/carts/:userId', CartController.getUserCart);
+routes.get('/api/carts', CartController.getCart);
+routes.delete('/api/cart/:id', CartController.deleteCart);
+
 
 //messages routes
 routes.post('/api/messages', MessageController.createMessage);

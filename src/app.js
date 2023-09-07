@@ -15,6 +15,7 @@ mongoose.connect(mongoAtlasUrl, {
 }, console.log('Connected to database'));
 
 app.use(cors());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(routes);
 

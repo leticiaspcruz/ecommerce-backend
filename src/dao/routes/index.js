@@ -1,7 +1,9 @@
 import { Router } from 'express';
+import passport from 'passport';
 import ProductController from '../../controllers/productController.js';
 import CartController from '../../controllers/cartController.js';
 import MessageController from '../../controllers/messageController.js';
+import UserController from '../../controllers/userController.js';
 
 const routes = Router();
 
@@ -27,5 +29,10 @@ routes.delete('/api/cart/:id', CartController.deleteCart);
 routes.post('/api/messages', MessageController.createMessage);
 routes.get('/api/messages', MessageController.getAllMessages);
 
+
+//user routes
+routes.post('/api/register', UserController.registerUser);
+routes.post('/api/login', UserController.userLogin);
+routes.get('/api/users', UserController.getUsers);
 
 export default routes;

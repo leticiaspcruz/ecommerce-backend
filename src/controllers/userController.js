@@ -1,58 +1,55 @@
 import passport from 'passport';
-import jwt from 'jsonwebtoken';
-import passportJWT from 'passport-jwt';
+import bcrypt from 'bcrypt';
+import { Strategy, ExtractJwt } from 'passport-jwt';
 import User from '../dao/models/userSchema.js';
 import dotenv from 'dotenv';
 
 dotenv.config({ path: './.env'});
 
-const jwtStrategy = passportJWT.Strategy;
-const extractJwt = passportJWT.ExtractJwt;
-
 const jwtOptions = {
-  jwtFromRequest: extractJwt.fromAuthHeaderAsBearerToken(),
+  jwtFromRequest:  ExtractJwt.fromAuthHeaderAsBearerToken(),
   secretOrKey:  process.env.JWT_SECRET_KEY,
 };
 
-passport.use(new jwtStrategy(jwtOptions, (jwtPayload, done) => {
-  User.findById(jwtPayload.id, (err, user) => {
-    if (err) {
-      return done(err, false);
-    }
+passport.use(new Strategy(jwtOptions, async (jwtPayload, done) => {
+  try {
+    const user = await User.findById(jwtPayload._id);
     if (user) {
       return done(null, user);
     } else {
       return done(null, false);
     }
-  });
+  } catch (error) {
+    return done(error, false);
+  }
 }));
 
 const UserController = {
   async registerUser(req, res) {
-    const { name, email, password } = req.body;
     try {
-      const newUser = new User({ name, email, password });
-      await newUser.save();
-      return res.json({ message: 'Usuário registrado com sucesso' });
+      const { name, email, password } = req.body;
+      const hashedPassword = await bcrypt.hash(password, 10); // O número 10 é o custo de hashing
+      const user = new User({ name, email, password: hashedPassword });
+      await user.save();
+      res.json({ message: 'Usuário registrado com sucesso.' });
     } catch (error) {
-      if (error.code === 11000 && error.keyValue.email) {
-        return res.status(400).json({ message: 'O email já está em uso' });
-      }
-      console.error(error);
-      return res.status(500).json({ message: 'Erro ao registrar usuário' });
+      res.status(500).json({ error: error.message });
     }
   },
   async userLogin(req, res) {
-    passport.authenticate('jwt', { session: false }, (err, user) => {
-      console.log(user)
-      if (err) {
-        return res.status(500).json({ message: 'Erro ao autenticar usuário' });
+    try {
+      const { email, password } = req.body;
+      const user = await User.findOne({ email });
+  
+      if (!user || !user.comparePassword(password)) {
+        return res.status(401).json({ message: 'Credenciais inválidas.' });
       }
-      if (!user) {
-        return res.status(401).json({ message: 'Credenciais inválidas' });
-      }
-      return res.json({ message: 'Autenticação bem-sucedida', user });
-    })(req, res);
+  
+      const token = user.generateAuthToken();
+      res.json({ token });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
   },
   async getUsers(req, res) {
     try {
@@ -62,7 +59,16 @@ const UserController = {
       console.error(error);
       return res.status(500).json({ message: 'Erro ao obter usuários' });
     }
-  }  
+  },
+  async getUserById(req, res) {
+    const { userId } = req.params;
+    try { 
+      const user = await User.findById(userId);
+      return res.status(200).json(user)
+    } catch(error) {
+      return res.status(400).send(error);
+    } 
+  },
 }
 
 export default UserController;

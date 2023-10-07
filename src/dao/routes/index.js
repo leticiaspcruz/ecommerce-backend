@@ -6,6 +6,7 @@ import MessageController from '../../controllers/messageController.js';
 import UserController from '../../controllers/userController.js';
 
 const routes = Router();
+const authenticate = passport.authenticate('jwt', { session: false });
 
 routes.get('/', (req, res) => {
     res.send('Bem vindx!')
@@ -33,6 +34,8 @@ routes.get('/api/messages', MessageController.getAllMessages);
 //user routes
 routes.post('/api/register', UserController.registerUser);
 routes.post('/api/login', UserController.userLogin);
-routes.get('/api/users', UserController.getUsers);
+routes.get('/api/users', authenticate, UserController.getUsers);
+routes.get('/api/users/:userId', UserController.getUserById);
+
 
 export default routes;

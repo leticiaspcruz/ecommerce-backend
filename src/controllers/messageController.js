@@ -1,4 +1,6 @@
 import Message from '../dao/models/messageSchema.js';
+import { ERROR_MESSAGES } from '../constants.js';
+import CustomError from '../services/customError.js';
 
 const MessageController = {
   createMessage: async (req, res) => {
@@ -8,8 +10,8 @@ const MessageController = {
       res.status(201).json(newMessage);
     } catch(error) {
       console.error(error);
-      return res.status(500).json(error);
-   }
+      throw new CustomError(ERROR_MESSAGES['INVALID_MESSAGE'], 400);
+    }
   },
 
   getAllMessages: async (req, res) => {
@@ -18,7 +20,7 @@ const MessageController = {
       res.status(200).json(messages);
     } catch(error) {
       console.error(error);
-      return res.status(500).json(error);
+      throw new CustomError(ERROR_MESSAGES['INVALID_MESSAGE'], 400);
     }
   },
 };

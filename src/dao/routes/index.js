@@ -12,6 +12,7 @@ import {
     TWILIO_AUTH_TOKEN, 
     TWILIO_SMS_NUMBER 
 } from '../../constants.js';
+import generateMockProducts from '../../services/mockingModule.js';
 
 const transport = nodemailer.createTransport(NODEMAILER_CONFIG);
 
@@ -78,5 +79,15 @@ routes.post('/api/sms', (req, res) => {
     console.log(`SMS enviado para ${phoneNumber}`);
     return res.send(`SMS enviado para ${phoneNumber} : ${name}  - Order ${orderNumber}`);
 });
+
+//mock route
+routes.get('/api/mockingproducts', async (req, res) => {
+    try {
+      const result = await generateMockProducts();
+      res.send(result);
+    } catch (error) {
+      res.status(500).send('Erro ao gerar e salvar produtos mockados: ' + error);
+    }
+  });
 
 export default routes;

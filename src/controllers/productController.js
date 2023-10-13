@@ -1,4 +1,6 @@
 import Product from '../dao/models/productSchema.js';
+import { ERROR_MESSAGES } from '../constants.js';
+import CustomError from '../services/customError.js';
 
 const ProductController = {
     async createProduct(req, res) {
@@ -9,7 +11,7 @@ const ProductController = {
 
         } catch(error) {
             console.error(error);
-            return res.status(500).json(error);
+            throw new CustomError(ERROR_MESSAGES['INVALID_PRODUCT_DATA'], 400);
         }
     },
 
@@ -22,10 +24,15 @@ const ProductController = {
                 productId,
                 updatedFields
             );
+
+            if (!updatedProduct) {
+                throw new CustomError(ERROR_MESSAGES['PRODUCT_NOT_FOUND'], 404);
+            }
+
             return res.status(200).json(updatedProduct);
         } catch(error) {
             console.error(error);
-            return res.status(500).json(error);
+            throw new CustomError(ERROR_MESSAGES['INVALID_PRODUCT_DATA'], 400);
         }
     },
 
@@ -33,10 +40,15 @@ const ProductController = {
         const { productId } = req.params
         try {
             const deletedProduct = await Product.findByIdAndDelete(productId)
+
+            if (!deletedProduct) {
+                throw new CustomError(ERROR_MESSAGES['PRODUCT_NOT_FOUND'], 404);
+            }
+
             return res.status(200).json(deletedProduct)
         } catch(error) {
             console.error(error);
-            return res.status(500).json(error);
+            throw new CustomError(ERROR_MESSAGES['PRODUCT_NOT_FOUND'], 404);
         }
     },
 
@@ -46,7 +58,7 @@ const ProductController = {
             return res.status(200).json(products)
         } catch(error) {
             console.error(error);
-            return res.status(500).json(error);
+            throw new CustomError(ERROR_MESSAGES['PRODUCT_NOT_FOUND'], 404);
         }
     },
 
@@ -54,10 +66,15 @@ const ProductController = {
         const { productId } = req.params
         try {
             const product = await Product.findById(productId)
+
+            if (!product) {
+                throw new CustomError(ERROR_MESSAGES['PRODUCT_NOT_FOUND'], 404);
+            }
+
             return res.status(200).json(product);
         } catch(error) {
             console.error(error);
-            return res.status(500).json(error);
+            throw new CustomError(ERROR_MESSAGES['PRODUCT_NOT_FOUND'], 404);
         }
     }
 }

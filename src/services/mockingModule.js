@@ -1,5 +1,3 @@
-// mockingModule.js
-
 import mongoose from 'mongoose';
 import Product from '../dao/models/productSchema.js';
 

@@ -1,6 +1,7 @@
 import Cart from '../dao/models/cartSchema.js';
 import { ERROR_MESSAGES } from '../constants.js';
 import CustomError from '../services/customError.js';
+import logger from '../utils/logger.js'; 
 
 const CartController = {
   async createCart(req, res) {
@@ -11,9 +12,10 @@ const CartController = {
         products: products,
       });
       const savedCart = await cart.save();
+      logger.info(`Carrinho criado com sucesso: ${JSON.stringify(savedCart)}`);
       return res.status(201).json(savedCart);
     } catch (error) {
-      console.error('Erro ao adicionar produtos ao carrinho:', error);
+      logger.error(`Erro ao adicionar produtos ao carrinho: ${error.message}`);
       throw new CustomError(ERROR_MESSAGES['INVALID_CART_ITEM'], 400);
     }
   },
@@ -25,9 +27,10 @@ const CartController = {
       if (!cart) {
         throw new CustomError(ERROR_MESSAGES['CART_ITEM_NOT_FOUND'], 404);
       }
+      logger.info(`Carrinho do usuário ID ${userId} encontrado: ${JSON.stringify(cart)}`);
       return res.status(200).json(cart);
     } catch (error) {
-      console.error('Erro ao buscar o carrinho do usuário:', error);
+      logger.error(`Erro ao buscar o carrinho do usuário: ${error.message}`);
       throw new CustomError(ERROR_MESSAGES['INVALID_CART_ITEM'], 400);
     }
   },
@@ -35,9 +38,10 @@ const CartController = {
   async getCart(req, res) {
     try {
       const carts = await Cart.find();
+      logger.info(`Carrinhos encontrados: ${JSON.stringify(carts)}`);
       return res.status(200).json(carts);
     } catch (error) {
-      console.error('Erro ao buscar carrinhos:', error);
+      logger.error(`Erro ao buscar carrinhos: ${error.message}`);
       throw new CustomError(ERROR_MESSAGES['INVALID_CART_ITEM'], 400);
     }
   },
@@ -49,9 +53,10 @@ const CartController = {
       if (!cart) {
         throw new CustomError(ERROR_MESSAGES['CART_ITEM_NOT_FOUND'], 404);
       }
+      logger.info(`Carrinho excluído com sucesso: ${JSON.stringify(cart)}`);
       res.status(204).json();
     } catch (error) {
-      console.error('Erro ao excluir o carrinho:', error);
+      logger.error(`Erro ao excluir o carrinho: ${error.message}`);
       throw new CustomError(ERROR_MESSAGES['INVALID_CART_ITEM'], 400);
     }
   },

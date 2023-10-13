@@ -5,6 +5,7 @@ import User from '../dao/models/userSchema.js';
 import dotenv from 'dotenv';
 import { ERROR_MESSAGES } from '../constants.js';
 import CustomError from '../services/customError.js';
+import logger from '../utils/logger.js'; 
 
 dotenv.config({ path: './.env'});
 
@@ -30,11 +31,13 @@ const UserController = {
   async registerUser(req, res) {
     try {
       const { name, email, password } = req.body;
-      const hashedPassword = await bcrypt.hash(password, 10); // O número 10 é o custo de hashing
+      const hashedPassword = await bcrypt.hash(password, 10);
       const user = new User({ name, email, password: hashedPassword });
       await user.save();
+      logger.info(`Usuário registrado com sucesso: ${JSON.stringify(user)}`);
       res.json({ message: 'Usuário registrado com sucesso.' });
     } catch (error) {
+      logger.error(`Erro ao registrar usuário: ${error.message}`);
       throw new CustomError(ERROR_MESSAGES['INVALID_USER_DATA'], 400);
     }
   },
@@ -43,14 +46,16 @@ const UserController = {
     try {
       const { email, password } = req.body;
       const user = await User.findOne({ email });
-  
+
       if (!user || !user.comparePassword(password)) {
         throw new CustomError(ERROR_MESSAGES['INVALID_CREDENTIALS'], 401);
       }
-  
+
       const token = user.generateAuthToken();
+      logger.info(`Usuário logado com sucesso: ${JSON.stringify(user)}`);
       res.json({ token });
     } catch (error) {
+      logger.error(`Erro ao fazer login: ${error.message}`);
       throw new CustomError(ERROR_MESSAGES['INVALID_USER_DATA'], 400);
     }
   },
@@ -58,25 +63,28 @@ const UserController = {
   async getUsers(req, res) {
     try {
       const users = await User.find();
+      logger.info(`Todos os usuários obtidos: ${JSON.stringify(users)}`);
       return res.json(users);
     } catch (error) {
-      console.error(error);
+      logger.error(`Erro ao obter usuários: ${error.message}`);
       throw new CustomError(ERROR_MESSAGES['USER_NOT_FOUND'], 404);
     }
   },
 
   async getUserById(req, res) {
     const { userId } = req.params;
-    try { 
+    try {
       const user = await User.findById(userId);
       if (!user) {
         throw new CustomError(ERROR_MESSAGES['USER_NOT_FOUND'], 404);
       }
-      return res.status(200).json(user)
+      logger.info(`Usuário obtido por ID: ${JSON.stringify(user)}`);
+      return res.status(200).json(user);
     } catch(error) {
+      logger.error(`Erro ao obter usuário por ID: ${error.message}`);
       throw new CustomError(ERROR_MESSAGES['USER_NOT_FOUND'], 404);
     } 
   },
-}
+};
 
 export default UserController;

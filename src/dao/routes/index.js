@@ -13,6 +13,7 @@ import {
     TWILIO_SMS_NUMBER 
 } from '../../constants.js';
 import generateMockProducts from '../../services/mockingModule.js';
+import logger from '../../utils/logger.js';
 
 const transport = nodemailer.createTransport(NODEMAILER_CONFIG);
 
@@ -88,6 +89,16 @@ routes.get('/api/mockingproducts', async (req, res) => {
     } catch (error) {
       res.status(500).send('Erro ao gerar e salvar produtos mockados: ' + error);
     }
-  });
+    });
+
+//logger route
+routes.get('/api/loggertest', (req, res) => {
+    logger.debug('Mensagem de depuração para teste');
+    logger.info('Mensagem de informação para teste');
+    logger.warn('Mensagem de aviso para teste');
+    logger.error('Mensagem de erro para teste');
+    res.send('Logs enviados para console e arquivo!');
+});
+
 
 export default routes;

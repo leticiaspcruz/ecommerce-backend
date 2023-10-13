@@ -6,6 +6,7 @@ import passport from 'passport';
 import compression from 'express-compression';
 import routes from './dao/routes/index.js';
 import errorHandler from './middlewares/errorHandler.js';
+import logger from './utils/logger.js';
 
 dotenv.config({ path: './.env'});
 
@@ -15,7 +16,7 @@ const mongoAtlasUrl = process.env.MONGODB_URI;
 mongoose.connect(mongoAtlasUrl, {
     useUnifiedTopology: true,
     useNewUrlParser: true
-}, console.log('Connected to database'));
+}, logger.debug('Connected to database'));
 
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
@@ -27,4 +28,4 @@ app.use(compression({
     brotli: { enabled: true, zlib:{} }
 }));
 
-app.listen(process.env.PORT || 8080, () => console.log('Server running'));
+app.listen(process.env.PORT || 8080, () => logger.debug('Server running'));

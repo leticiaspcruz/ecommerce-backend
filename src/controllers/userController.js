@@ -3,6 +3,8 @@ import bcrypt from 'bcrypt';
 import { Strategy, ExtractJwt } from 'passport-jwt';
 import User from '../dao/models/userSchema.js';
 import dotenv from 'dotenv';
+import { ERROR_MESSAGES } from '../constants.js';
+import CustomError from '../services/customError.js';
 
 dotenv.config({ path: './.env'});
 
@@ -33,40 +35,46 @@ const UserController = {
       await user.save();
       res.json({ message: 'Usuário registrado com sucesso.' });
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      throw new CustomError(ERROR_MESSAGES['INVALID_USER_DATA'], 400);
     }
   },
+
   async userLogin(req, res) {
     try {
       const { email, password } = req.body;
       const user = await User.findOne({ email });
   
       if (!user || !user.comparePassword(password)) {
-        return res.status(401).json({ message: 'Credenciais inválidas.' });
+        throw new CustomError(ERROR_MESSAGES['INVALID_CREDENTIALS'], 401);
       }
   
       const token = user.generateAuthToken();
       res.json({ token });
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      throw new CustomError(ERROR_MESSAGES['INVALID_USER_DATA'], 400);
     }
   },
+
   async getUsers(req, res) {
     try {
       const users = await User.find();
       return res.json(users);
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ message: 'Erro ao obter usuários' });
+      throw new CustomError(ERROR_MESSAGES['USER_NOT_FOUND'], 404);
     }
   },
+
   async getUserById(req, res) {
     const { userId } = req.params;
     try { 
       const user = await User.findById(userId);
+      if (!user) {
+        throw new CustomError(ERROR_MESSAGES['USER_NOT_FOUND'], 404);
+      }
       return res.status(200).json(user)
     } catch(error) {
-      return res.status(400).send(error);
+      throw new CustomError(ERROR_MESSAGES['USER_NOT_FOUND'], 404);
     } 
   },
 }

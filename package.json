@@ -1,7 +1,7 @@
 {
   "name": "app-ecommerce",
   "version": "1.0.0",
-  "description": "",
+  "description": "E-commerce website built with Node.js - Coderhouse 2023",
   "main": "app.js",
   "type": "module",
   "scripts": {

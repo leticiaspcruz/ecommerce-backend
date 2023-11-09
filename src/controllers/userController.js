@@ -49,11 +49,14 @@ const UserController = {
     try {
       const { email, password } = req.body;
       const user = await User.findOne({ email });
-
-      if (!user || !user.comparePassword(password)) {
+  
+      if (!user) {
+        throw new CustomError(ERROR_MESSAGES['USER_NOT_FOUND'], 401);
+      }
+      const isValidPassword = await bcrypt.compare(password, user.password);
+      if (!isValidPassword) {
         throw new CustomError(ERROR_MESSAGES['INVALID_CREDENTIALS'], 401);
       }
-
       const token = user.generateAuthToken();
       logger.info(`Usuário logado com sucesso: ${JSON.stringify(user)}`);
       res.json({ token });
@@ -62,7 +65,6 @@ const UserController = {
       throw new CustomError(ERROR_MESSAGES['INVALID_USER_DATA'], 400);
     }
   },
-
   async getUsers(req, res) {
     try {
       if (req.user.role !== 'admin') {

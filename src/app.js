@@ -31,7 +31,7 @@ const swaggerOptions = {
         },
       ],
     },
-    apis: ['./dao/routes/index.js'],
+    apis: ['src/dao/routes/index.js'],
   };
 
 const specs = swaggerJsdoc(swaggerOptions);

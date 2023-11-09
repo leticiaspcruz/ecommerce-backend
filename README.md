@@ -23,6 +23,7 @@ The following libraries and technologies were used to develop this project:
 
 # Requirements
 - Node.js 16.x
+
 Tip: use NVM to install Node.js: nvm install 16
 
 ## Installation and usage

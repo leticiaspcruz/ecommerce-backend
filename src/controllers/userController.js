@@ -30,9 +30,12 @@ passport.use(new Strategy(jwtOptions, async (jwtPayload, done) => {
 const UserController = {
   async registerUser(req, res) {
     try {
-      const { name, email, password } = req.body;
+      const { name, email, password, role } = req.body;
+      if (!role || !['user', 'admin'].includes(role)) {
+        throw new CustomError(ERROR_MESSAGES['INVALID_ROLE'], 400);
+      }
       const hashedPassword = await bcrypt.hash(password, 10);
-      const user = new User({ name, email, password: hashedPassword });
+      const user = new User({ name, email, password: hashedPassword, role });
       await user.save();
       logger.info(`Usuário registrado com sucesso: ${JSON.stringify(user)}`);
       res.json({ message: 'Usuário registrado com sucesso.' });
@@ -62,11 +65,19 @@ const UserController = {
 
   async getUsers(req, res) {
     try {
+      if (req.user.role !== 'admin') {
+        throw new CustomError(ERROR_MESSAGES['UNAUTHORIZED_ACCESS'], 403);
+      }
+  
       const users = await User.find();
       logger.info(`Todos os usuários obtidos: ${JSON.stringify(users)}`);
       return res.json(users);
     } catch (error) {
-      logger.error(`Erro ao obter usuários: ${error.message}`);
+      if (error.code === 403) {
+        logger.error(`Usuário não autorizado a acessar a rota: ${error.message}`);
+      } else {
+        logger.error(`Erro ao obter usuários: ${error.message}`);
+      }
       throw new CustomError(ERROR_MESSAGES['USER_NOT_FOUND'], 404);
     }
   },
@@ -74,6 +85,9 @@ const UserController = {
   async getUserById(req, res) {
     const { userId } = req.params;
     try {
+      if (req.user.role !== 'admin') {
+        throw new CustomError(ERROR_MESSAGES['UNAUTHORIZED_ACCESS'], 403);
+      }
       const user = await User.findById(userId);
       if (!user) {
         throw new CustomError(ERROR_MESSAGES['USER_NOT_FOUND'], 404);
@@ -81,9 +95,13 @@ const UserController = {
       logger.info(`Usuário obtido por ID: ${JSON.stringify(user)}`);
       return res.status(200).json(user);
     } catch(error) {
-      logger.error(`Erro ao obter usuário por ID: ${error.message}`);
+      if (error.code === 403) {
+        logger.error(`Usuário não autorizado a acessar a rota: ${error.message}`);
+      } else {
+        logger.error(`Erro ao obter usuário por ID: ${error.message}`);
+      }
       throw new CustomError(ERROR_MESSAGES['USER_NOT_FOUND'], 404);
-    } 
+    }
   },
 };
 

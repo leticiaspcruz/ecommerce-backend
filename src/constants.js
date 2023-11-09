@@ -23,5 +23,7 @@ export const ERROR_MESSAGES = {
   INVALID_USER_DATA: 'Dados do usuário inválidos.',
   INVALID_CREDENTIALS: 'Credenciais inválidas.',
   USER_NOT_FOUND: 'Usuário não encontrado.',
+  INVALID_TICKET_DATA: 'Dados inválidos para o ticket.',
+  TICKET_NOT_FOUND: 'Ticket não encontrado.'
 };
 

@@ -6,6 +6,7 @@ import ProductController from '../../controllers/productController.js';
 import CartController from '../../controllers/cartController.js';
 import MessageController from '../../controllers/messageController.js';
 import UserController from '../../controllers/userController.js';
+import TicketController from  '../../controllers/ticketController.js';
 import { 
     NODEMAILER_CONFIG, 
     TWILIO_ACCOUNT_SID, 
@@ -346,8 +347,54 @@ routes.get('/api/users', authenticate, UserController.getUsers);
  */
 routes.get('/api/users/:userId', UserController.getUserById);
 
-//mailing routes
+//ticket routes
 
+/**
+ * @swagger
+ * /api/tickets:
+ *   post:
+ *     summary: Cria um ticket de compra
+ *     tags:
+ *       - Tickets
+ *     responses:
+ *       200:
+ *         description: Ticket criado com sucesso
+ *       400:
+ *         description: Erro ao criar ticket
+ */
+routes.post('/api/tickets', TicketController.createTicket);
+
+/**
+ * @swagger
+ * /api/tickets:
+ *   post:
+ *     summary: Retorna todos os tickets de compra
+ *     tags:
+ *       - Tickets
+ *     responses:
+ *       200:
+ *         description: Todos os tickets obtidos
+ *       404:
+ *         description: Erro ao obter tickets
+ */
+routes.get('/api/tickets', TicketController.getTickets);
+
+/**
+ * @swagger
+ * /api/tickets:
+ *   post:
+ *     summary: Retorna o ticket de compra pelo seu id
+ *     tags:
+ *       - Tickets
+ *     responses:
+ *       200:
+ *         description: Ticket obtido por ID
+ *       404:
+ *         description: Erro ao obter ticket por ID
+ */
+routes.get('/api/tickets/:ticketId', TicketController.getTicketById);
+
+//mailing routes
 
 /**
  * @swagger
